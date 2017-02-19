@@ -63,6 +63,7 @@ module.exports = class DrivelistScanner extends EventEmitter
 			drives: []
 
 		@drives = options.drives
+		@intervalMs = options.interval
 
 		if not @drives?
 			@scan()
@@ -141,7 +142,7 @@ module.exports = class DrivelistScanner extends EventEmitter
 
 		@interval = setInterval =>
 			@scan()
-		, options.interval
+		, @intervalMs
 
 	###*
 	# @summary Stop the check interval

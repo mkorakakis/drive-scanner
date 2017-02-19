@@ -76,6 +76,7 @@ module.exports = DrivelistScanner = (function(_super) {
       drives: []
     });
     this.drives = options.drives;
+    this.intervalMs = options.interval;
     if (this.drives == null) {
       this.scan();
     }
@@ -171,7 +172,7 @@ module.exports = DrivelistScanner = (function(_super) {
       return function() {
         return _this.scan();
       };
-    })(this), options.interval);
+    })(this), this.intervalMs);
   };
 
 
