@@ -63,12 +63,12 @@ module.exports = class DrivelistScanner extends EventEmitter
 			drives: []
 
 		@drives = options.drives
+		@intervalMs = options.interval
 
-		@interval = setInterval =>
+		if not @drives?
 			@scan()
-		, options.interval
 
-		@scan()
+		@start()
 
 	###*
 	# @summary Fires events when a drive has been added/removed
@@ -126,6 +126,25 @@ module.exports = class DrivelistScanner extends EventEmitter
 			return _.reject(drives, system: true)
 
 	###*
+	# @summary Start the check interval, after stopping any existing interval
+	# @method
+	# @public
+	#
+	#
+	# @example
+	# scanner = new DrivelistScanner(interval: 1000, drives: [ { foo: 'bar' } ])
+	# scanner.stop()
+	# scanner.start()
+	###
+	start: ->
+		if @interval?
+			clearInterval(@interval)
+
+		@interval = setInterval =>
+			@scan()
+		, @intervalMs
+
+	###*
 	# @summary Stop the check interval
 	# @method
 	# @public
@@ -140,6 +159,7 @@ module.exports = class DrivelistScanner extends EventEmitter
 		if not @interval?
 			throw new Error('Can\'t stop interval. Are you calling stop() with the right context?')
 		clearInterval(@interval)
+		@interval = null
 
 ###*
 @external EventEmitter

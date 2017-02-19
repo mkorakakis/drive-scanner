@@ -76,12 +76,11 @@ module.exports = DrivelistScanner = (function(_super) {
       drives: []
     });
     this.drives = options.drives;
-    this.interval = setInterval((function(_this) {
-      return function() {
-        return _this.scan();
-      };
-    })(this), options.interval);
-    this.scan();
+    this.intervalMs = options.interval;
+    if (this.drives == null) {
+      this.scan();
+    }
+    this.start();
   }
 
 
@@ -154,6 +153,30 @@ module.exports = DrivelistScanner = (function(_super) {
 
 
   /**
+  	 * @summary Start the check interval, after stopping any existing interval
+  	 * @method
+  	 * @public
+  	 *
+  	 *
+  	 * @example
+  	 * scanner = new DrivelistScanner(interval: 1000, drives: [ { foo: 'bar' } ])
+  	 * scanner.stop()
+  	 * scanner.start()
+   */
+
+  DrivelistScanner.prototype.start = function() {
+    if (this.interval != null) {
+      clearInterval(this.interval);
+    }
+    return this.interval = setInterval((function(_this) {
+      return function() {
+        return _this.scan();
+      };
+    })(this), this.intervalMs);
+  };
+
+
+  /**
   	 * @summary Stop the check interval
   	 * @method
   	 * @public
@@ -169,7 +192,8 @@ module.exports = DrivelistScanner = (function(_super) {
     if (this.interval == null) {
       throw new Error('Can\'t stop interval. Are you calling stop() with the right context?');
     }
-    return clearInterval(this.interval);
+    clearInterval(this.interval);
+    return this.interval = null;
   };
 
   return DrivelistScanner;

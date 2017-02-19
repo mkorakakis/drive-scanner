@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "bluebird": "^3.0.0",
-    "drivelist": "^2.0.1",
+    "drivelist": "^5.0.9",
     "lodash": "^3.10.1"
   }
 }
